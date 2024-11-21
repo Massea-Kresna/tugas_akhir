@@ -45,89 +45,134 @@ $users = $conn->query("SELECT id, username FROM users");
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Members</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Members Management</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            max-width: 1000px;
+        }
+        .table th, .table td {
+            vertical-align: middle;
+        }
+        .card-header {
+            background-color: #f8f9fa;
+        }
+        .modal-content {
+            border-radius: 0.5rem;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h2 class="mt-4">Members Management</h2>
-        <form method="POST" class="mb-4">
-            <div class="mb-3">
-                <input type="text" name="name" placeholder="Name" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <input type="email" name="email" placeholder="Email" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <input type="text" name="phone" placeholder="Phone" class="form-control" required>
-            </div>
-            <button type="submit" name="add" class="btn btn-primary">Add Member</button>
-        </form>
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Members Management</h2>
 
-        <h3>Member List</h3>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php while ($row = $members->fetch_assoc()): ?>
-                <tr>
-                    <td><?= $row['id']; ?></td>
-                    <td><?= $row['name']; ?></td>
-                    <td><?= $row['email']; ?></td>
-                    <td><?= $row['phone']; ?></td>
-                    <td>
-                        <form method="POST" class="d-inline">
-                            <input type="hidden" name="id" value="<?= $row['id']; ?>">
-                            <button type="button" class="btn btn-warning btn-sm" 
-                                onclick="editMember(<?= $row['id']; ?>, '<?= $row['name']; ?>', 
-                                '<?= $row['email']; ?>', '<?= $row['phone']; ?>')">
-                                Edit
-                            </button>
-                            <button type="submit" name="delete" class="btn btn-danger btn-sm">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-                <?php endwhile; ?>
-            </tbody>
-        </table>
-<hr></hr>
-<hr></hr>
+        <!-- Form Tambah Anggota -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Add New Member</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <input type="text" name="name" placeholder="Name" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="email" name="email" placeholder="Email" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="text" name="phone" placeholder="Phone" class="form-control" required>
+                    </div>
+                    <button type="submit" name="add" class="btn btn-primary">Add Member</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Daftar Anggota -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Member List</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($row = $members->fetch_assoc()): ?>
+                        <tr>
+                            <td><?= $row['id']; ?></td>
+                            <td><?= $row['name']; ?></td>
+                            <td><?= $row['email']; ?></td>
+                            <td><?= $row['phone']; ?></td>
+                            <td>
+                                <form method="POST" class="d-inline">
+                                    <input type="hidden" name="id" value="<?= $row['id']; ?>">
+                                    <button type="button" class="btn btn-warning btn-sm" 
+                                        onclick="editMember(<?= $row['id']; ?>, '<?= $row['name']; ?>', 
+                                        '<?= $row['email']; ?>', '<?= $row['phone']; ?>')">
+                                        Edit
+                                    </button>
+                                    <button type="submit" name="delete" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Form Tambah User (Admin) -->
         <?php if ($isAdmin): ?>
-        <h2 class="mt-4">Add User</h2>
-        <form method="POST" class="mb-4">
-            <div class="mb-3">
-                <input type="text" name="username" placeholder="Username" class="form-control" required>
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Add New User</h5>
             </div>
-            <div class="mb-3">
-                <input type="password" name="password" placeholder="Password" class="form-control" required>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <input type="text" name="username" placeholder="Username" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="password" name="password" placeholder="Password" class="form-control" required>
+                    </div>
+                    <button type="submit" name="add_user" class="btn btn-primary">Add User</button>
+                </form>
             </div>
-            <button type="submit" name="add_user" class="btn btn-primary">Add User</button>
-        </form>
+        </div>
 
-        <h3>User List</h3>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Username</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php while ($row = $users->fetch_assoc()): ?>
-                <tr>
-                    <td><?= $row['id']; ?></td>
-                    <td><?= $row['username']; ?></td>
-                </tr>
-                <?php endwhile; ?>
-            </tbody>
-        </table>
+        <!-- Daftar User (Admin) -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">User List</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($row = $users->fetch_assoc()): ?>
+                        <tr>
+                            <td><?= $row['id']; ?></td>
+                            <td><?= $row['username']; ?></td>
+                        </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
         <?php endif; ?>
 
         <a href="dashboard.php" class="btn btn-secondary mt-3">Back to Dashboard</a>
@@ -154,5 +199,7 @@ $users = $conn->query("SELECT id, username FROM users");
             form.querySelector('button[type="submit"]').remove();
         }
     </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

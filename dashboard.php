@@ -14,13 +14,19 @@ if (!isset($_SESSION['user'])) {
 </head>
 <body>
     <div class="container">
-        <h2 class="mt-4">Dashboard</h2>
-        <p>Welcome, <strong><?= htmlspecialchars($_SESSION['user']); ?></strong>!</p>
-        <div class="mb-3">
-            <a href="books.php" class="btn btn-primary">Manage Books</a>
-            <a href="members.php" class="btn btn-primary">Manage Members</a>
-            <a href="transaction.php" class="btn btn-primary">Transactions</a>
-            <a href="logout.php" class="btn btn-danger">Logout</a>
+        <div class="card mt-5">
+            <div class="card-header">
+                <h2>Dashboard</h2>
+            </div>
+            <div class="card-body">
+                <p>Welcome, <strong><?= htmlspecialchars($_SESSION['user']); ?></strong>!</p>
+                <div class="mb-3">
+                    <a href="books.php" class="btn btn-primary">Manage Books</a>
+                    <a href="members.php" class="btn btn-primary">Manage Members</a>
+                    <a href="transaction.php" class="btn btn-primary">Transactions</a>
+                    <a href="logout.php" class="btn btn-danger">Logout</a>
+                </div>
+            </div>
         </div>
     </div>
 </body>

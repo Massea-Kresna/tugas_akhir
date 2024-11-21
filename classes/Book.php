@@ -10,6 +10,17 @@ class Book {
         return $this->conn->query("SELECT * FROM books");
     }
 
+    // Method baru untuk pencarian buku
+    public function searchBooks($keyword) {
+        $keyword = '%' . $this->conn->real_escape_string($keyword) . '%';
+        $query = "SELECT * FROM books WHERE title LIKE ? OR author LIKE ? OR year LIKE ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param('sss', $keyword, $keyword, $keyword);
+        $stmt->execute();
+        return $stmt->get_result();
+    }
+
+
     public function addBook($title, $author, $year, $stock) {
         $query = "INSERT INTO books (title, author, year, stock) VALUES ('$title', '$author', '$year', '$stock')";
         return $this->conn->query($query);
